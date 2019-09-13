@@ -112,10 +112,10 @@ function backpropagation!(N::Network, β::AbstractArray, X::AbstractArray, Y::Ab
         y = @view Y[:, i]
         j = argmax(y)
         N.δ[j, i] -= 1
-        score[i][N.index[end]] = @views vec([(N.δ[1:N.sizes[end], i]*(N.a[end-1][1:end-1, i])' + N.λ/n^2*N.weights[end][:, 1:end-1]) N.δ[1:N.sizes[end], i]])
+        score[i][N.index[end]] = @views vec([(N.δ[1:N.sizes[end], i]*(N.a[end-1][1:end-1, i])' + N.λ/n*N.weights[end][:, 1:end-1]) N.δ[1:N.sizes[end], i]])
         for l = (N.num_layers-2):-1:1
             N.δ[1:N.sizes[l+1], i] = @views ((N.weights[l+1][:, 1:end-1])'*N.δ[1:N.sizes[l+2], i]).*map(z -> z==0 ? 0 : 1, N.a[l+1][1:end-1, i])
-            score[i][N.index[l]] = @views vec([(N.δ[1:N.sizes[l+1], i]*(N.a[l][1:end-1, i])' + N.λ/n^2*N.weights[l][:, 1:end-1]) N.δ[1:N.sizes[l+1], i]])
+            score[i][N.index[l]] = @views vec([(N.δ[1:N.sizes[l+1], i]*(N.a[l][1:end-1, i])' + N.λ/n*N.weights[l][:, 1:end-1]) N.δ[1:N.sizes[l+1], i]])
         end
     end
 end
@@ -130,10 +130,10 @@ function backpropagation!(N::Network, β::AbstractArray, X::AbstractArray, Y::Ab
         y = @view Y[:, i]
         j = argmax(y)
         N.δ[j, i] -= 1
-        score[N.index[end]] = @views vec([(N.δ[1:N.sizes[end], i]*(N.a[end-1][1:end-1, i])' + N.λ/n^2*N.weights[end][:, 1:end-1]) N.δ[1:N.sizes[end], i]])
+        score[N.index[end]] = @views vec([(N.δ[1:N.sizes[end], i]*(N.a[end-1][1:end-1, i])' + N.λ/n*N.weights[end][:, 1:end-1]) N.δ[1:N.sizes[end], i]])
         for l = (N.num_layers-2):-1:1
             N.δ[1:N.sizes[l+1], i] = @views ((N.weights[l+1][:, 1:end-1])'*N.δ[1:N.sizes[l+2], i]).*map(z -> z==0 ? 0 : 1, N.a[l+1][1:end-1, i])
-            score[N.index[l]] = @views vec([(N.δ[1:N.sizes[l+1], i]*(N.a[l][1:end-1, i])' + N.λ/n^2*N.weights[l][:, 1:end-1]) N.δ[1:N.sizes[l+1], i]])
+            score[N.index[l]] = @views vec([(N.δ[1:N.sizes[l+1], i]*(N.a[l][1:end-1, i])' + N.λ/n*N.weights[l][:, 1:end-1]) N.δ[1:N.sizes[l+1], i]])
         end
         hessian[:, :] = @views hessian[:, :] + score*score'
     end

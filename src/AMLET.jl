@@ -46,7 +46,7 @@ export
     mean,
     
     #Solving gears
-    solve, solve_BTR_BFGS, solve_BTR_TH, solve_RSAG, solve_AG, solve_BFGS, solve_BTR_LBHHH, solve_BTR_BHHH, solve_BTR_RA,
+    solve, solve_BTR_BFGS, solve_BTR_TH, solve_RSAG, solve_AG, solve_BFGS, solve_BTR_HOPS, solve_BTR_BHHH, solve_BTR_RA,
 
     #Tests
     Network,

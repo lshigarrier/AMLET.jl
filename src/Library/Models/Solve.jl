@@ -13,9 +13,9 @@ function solve_BTR_RA(m::Models, β0::AbstractArray, N0::Int64, coeff::Float64;
             if m.sample_size == m.n_train
                 m.ϵ = 0.0
             end
-            state, acc = OPTIM_btr_LBHHH(m.f, m.score!, β0, m.batch.weights[1:m.subsample], verbose = verbose, epsilon = 1e-20, tTest = m.tTest)
+            state, acc = OPTIM_btr_HOPS(m.f, m.score!, β0, m.batch.weights[1:m.subsample], verbose = verbose, epsilon = 1e-20, tTest = m.tTest)
         else
-             state, acc = OPTIM_btr_LBHHH(m.f_train, m.score!, β0, m.batch.weights[1:m.subsample], verbose = verbose, epsilon = 1e-20, tTest = m.validation)        
+             state, acc = OPTIM_btr_HOPS(m.f_train, m.score!, β0, m.batch.weights[1:m.subsample], verbose = verbose, epsilon = 1e-20, tTest = m.validation)        
         end
         β0 = copy(state.x)
         f_values = copy([f_values; acc])
@@ -26,19 +26,19 @@ function solve_BTR_RA(m::Models, β0::AbstractArray, N0::Int64, coeff::Float64;
     return β0, f_values
 end
 
-function solve_BTR_LBHHH(m::Models; x0::AbstractArray = zeros(m.dim), verbose::Bool = false, nmax::Int64 = 1000, criterion::Int64 = 1)
+function solve_BTR_HOPS(m::Models; x0::AbstractArray = zeros(m.dim), verbose::Bool = false, nmax::Int64 = 1000, criterion::Int64 = 1)
     w = Int64[]
     for ind in m.batch
         push!(w, ind.n_sim)
     end
     if criterion == 1
-        return OPTIM_btr_LBHHH(m.f, m.score!, x0, w, verbose = verbose, nmax = nmax)
+        return OPTIM_btr_HOPS(m.f, m.score!, x0, w, verbose = verbose, nmax = nmax)
     end
     if criterion == 2
-        return OPTIM_btr_LBHHH(m.f, m.score!, x0, w, verbose = verbose, nmax = nmax, epsilon = 1e-20, tTest = m.tTest)
+        return OPTIM_btr_HOPS(m.f, m.score!, x0, w, verbose = verbose, nmax = nmax, epsilon = 1e-20, tTest = m.tTest)
     end
     if criterion == 3
-        return OPTIM_btr_LBHHH(m.f, m.score!, x0, w, verbose = verbose, nmax = nmax, epsilon = 1e-20, tTest = m.validation)
+        return OPTIM_btr_HOPS(m.f, m.score!, x0, w, verbose = verbose, nmax = nmax, epsilon = 1e-20, tTest = m.validation)
     end 
 end
 

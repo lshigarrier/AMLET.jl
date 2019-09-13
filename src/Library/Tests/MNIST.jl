@@ -163,9 +163,9 @@ vargs[4] = sample_coeff::Float64 (if optim == RA)
         mnist.ϵ = vargs[3]
         mnist.score! = g_score!
         param, acc = solve_BTR_RA(mnist, β0, vargs[1], vargs[2], sample_coeff = vargs[4], criterion = criterion, verbose = verbose)
-    elseif optim == "LBHHH"
+    elseif optim == "HOPS"
         mnist.score! = g_score!
-        state, acc = solve_BTR_LBHHH(mnist, x0 = β0, verbose = verbose, criterion = criterion)
+        state, acc = solve_BTR_HOPS(mnist, x0 = β0, verbose = verbose, criterion = criterion)
         param = state.x
     elseif optim == "BFGS"
         mnist.∇f! = g!
