@@ -20,12 +20,13 @@ function evaluation(β::AbstractArray, X::AbstractArray, Y::AbstractArray, N::Ne
 end
 
 function Test_MNIST(optim::String = "RA", layers::Array = [], init_seed::Int64 = 1, set_seed::Int64 = 0,
-        criterion::Int64 = 2, verbose::Bool = false, vargs ...)
+        criterion::Int64 = 2, verbose::Bool = false, vargs ...; lambda::Float64 = 0.0)
 """
 vargs[1] = N0::Int64 (if optim == RA)
 vargs[2] = coeff::Float64 (if optim == RA)
 vargs[3] = eps::Float64 (if optim == RA)
 vargs[4] = sample_coeff::Float64 (if optim == RA)
+lambda : regularization parameter
 """
     
     (train_x, train_y) = MNIST.traindata()
@@ -36,7 +37,7 @@ vargs[4] = sample_coeff::Float64 (if optim == RA)
     nvalid = criterion==3 ? ntest : 0
     ntot = ntrain + nvalid + ntest
     sizes = size(layers, 1) != 0 ? [784; layers; 10] : [784, 10]
-    N = Network(sizes, 0.0, ntot, init_seed)
+    N = Network(sizes, lambda, ntot, init_seed)
     
     b = BatchMLP([MNIST.convert2features(train_x) MNIST.convert2features(test_x)], [one_hot(train_y, 10) one_hot(test_y, 10)], ones(Int64, ntot))
     mnist = MLP(b, N.index[end][end])
