@@ -38,7 +38,7 @@ vargs[5] = lambda::Float64 (if optim == RA)
     nvalid = criterion==3 ? ntest : 0
     ntot = ntrain + nvalid + ntest
     sizes = size(layers, 1) != 0 ? [784; layers; 10] : [784, 10]
-	lambda = optim=="RA" ? vargs[5] : vargs[1]
+	lambda = optim!="RA" ? vargs[1] : vargs[5]
     N = Network(sizes, lambda, ntot, init_seed)
     
     b = BatchMLP([MNIST.convert2features(train_x) MNIST.convert2features(test_x)], [one_hot(train_y, 10) one_hot(test_y, 10)], ones(Int64, ntot))
